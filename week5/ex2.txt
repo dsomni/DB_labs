@@ -1,0 +1,55 @@
+CREATE TABLE CompanyGroup(
+  groupId INTEGER PRIMARY KEY
+);
+
+CREATE TABLE Company(
+  companyId INTEGER PRIMARY KEY,
+  inStructureOf INTEGER,
+  ownerGroup INTEGER,
+  FOREIGN KEY (inStructureOf) REFERENCES Company(companyId),
+  FOREIGN KEY (ownerGroup) REFERENCES CompanyGroup(groupId)
+);
+
+CREATE TABLE Plant(
+  plantId INTEGER PRIMARY KEY,
+  grownByCompany INTEGER,
+  FOREIGN KEY (grownByCompany) REFERENCES Company(companyId)
+);
+
+CREATE TABLE Item(
+  itemId INTEGER PRIMARY KEY,
+  producedByPlant INTEGER,
+  FOREIGN KEY (producedByPlant) REFERENCES Plant(plantId)
+);
+
+# CREATE TABLE Produces(
+#   plant INTEGER,
+#   item INTEGER,
+#   PRIMARY KEY (plant, item),
+#   FOREIGN KEY (plant) REFERENCES Plant(plantId),
+#   FOREIGN KEY (item) REFERENCES Item(itemId)
+# );
+
+# CREATE TABLE CompanyHasPlant(
+#   company INTEGER,
+#   plant INTEGER,
+#   PRIMARY KEY (company, plant),
+#   FOREIGN KEY (company) REFERENCES Company(companyId),
+#   FOREIGN KEY (plant) REFERENCES Plant(plantId)
+# );
+
+# CREATE TABLE Structure(
+#   owner INTEGER,
+#   subsidiary INTEGER,
+#   PRIMARY KEY (owner, subsidiary),
+#   FOREIGN KEY (owner) REFERENCES Company(companyId),
+#   FOREIGN KEY (subsidiary) REFERENCES Company(companyId)
+# );
+
+# CREATE TABLE GroupHasCompany(
+#   ownerGroup INTEGER,
+#   company INTEGER,
+#   PRIMARY KEY (company, plant),
+#   FOREIGN KEY (company) REFERENCES Company(companyId),
+#   FOREIGN KEY (plant) REFERENCES Plant(plantId)
+# );

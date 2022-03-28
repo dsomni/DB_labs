@@ -1,0 +1,76 @@
+CREATE TABLE Customer (
+  clientId INTEGER PRIMARY KEY,
+  balance INTEGER,
+  creditLimit INTEGER,
+  discount INTEGER
+);
+
+CREATE TABLE ShippingAddress(
+  shId INTEGER PRIMARY KEY,
+  house INTEGER,
+  street VARCHAR(64),
+  district VARCHAR(32),
+  city VARCHAR(32)
+);
+
+CREATE TABLE CustomersShippingAddresses(
+  shippingAddress INTEGER,
+  clientId INTEGER,
+  PRIMARY KEY (shippingAddress, clientId),
+  FOREIGN KEY (clientId) REFERENCES Customer(clientId),
+  FOREIGN KEY (shippingAddress) REFERENCES ShippingAddress(shId)
+);
+
+CREATE TABLE OrderItem(
+  orderId INTEGER PRIMARY KEY,
+  date INTEGER,
+  shippingAddress INTEGER ,
+  owner INTEGER NOT NULL,
+  FOREIGN KEY (owner) REFERENCES Customer(clientId),
+  FOREIGN KEY (shippingAddress) REFERENCES ShippingAddress(shId)
+);
+
+CREATE TABLE OrdersShippingAddresses(
+  shippingAddress INTEGER,
+  orderId INTEGER,
+  PRIMARY KEY (shippingAddress, orderId),
+  FOREIGN KEY (shippingAddress) REFERENCES ShippingAddress(shId),
+  FOREIGN KEY (orderId) REFERENCES OrderItem(orderId)
+);
+
+CREATE TABLE Place(
+  customer INTEGER,
+  orderItem INTEGER,
+  PRIMARY KEY (customer, orderItem),
+  FOREIGN KEY (customer) REFERENCES Customer(clientId),
+  FOREIGN KEY (orderItem) REFERENCES OrderItem(orderId)
+);
+
+CREATE TABLE Item(
+  itemId INTEGER PRIMARY KEY,
+  description VARCHAR(256)
+);
+
+CREATE TABLE Includes(
+  quantity INTEGER,
+  orderItem INTEGER,
+  item INTEGER,
+  PRIMARY KEY (orderItem, item),
+  FOREIGN KEY (orderItem) REFERENCES OrderItem(orderId),
+  FOREIGN KEY (item) REFERENCES Item(itemId)
+);
+
+
+CREATE TABLE Manufacturer(
+  manufacturerId INTEGER PRIMARY KEY,
+  phoneNumber INTEGER
+);
+
+CREATE TABLE Produce(
+  quantity INTEGER,
+  manufacturer INTEGER,
+  item INTEGER,
+  PRIMARY KEY (manufacturer, item),
+  FOREIGN KEY (manufacturer) REFERENCES Manufacturer(manufacturerId),
+  FOREIGN KEY (item) REFERENCES Item(itemId)
+);
