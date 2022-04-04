@@ -90,3 +90,22 @@ GROUP BY P.orderId
 #### output
 
 check ex1.output1.jpg
+
+### Obtain the customer whose purchase in terms of money has been greater than the others
+
+#### query
+
+SELECT C.customerId, C.customerName, Ct.cityName
+FROM (
+SELECT O.customerId as cId, SUM(P.price) AS totalPrice
+FROM "Ex1"."Orders" as O
+LEFT JOIN "Ex1"."Purchases" as P ON O.orderId = P.orderId
+GROUP BY O.customerId
+ORDER BY SUM(P.price) DESC
+LIMIT 1
+) as Target, "Ex1"."Customers" as C, "Ex1"."Cities" as Ct
+WHERE C.customerId = Target.cId AND Ct.cityId = C.cityId
+
+#### output
+
+check ex1.output2.jpg
