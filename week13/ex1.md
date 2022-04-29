@@ -51,3 +51,84 @@ MATCH (b)-[r2:beats]->(a)
 WITH a, b, COUNT(r1) AS t1, COUNT(r2) AS t2
 WHERE t1 = t2 = 1
 RETURN a,b
+
+#### (3) Return all fighter that can “Khabib Nurmagomedov” beat them and he didn’t have a fight with them yet
+
+MATCH (a:Fighter {name:'Khabib Nurmagomedov'})-[r1:beats*2..]->(b)
+RETURN b
+
+#### (4) Return undefeated Fighters(0 loss)
+
+MATCH (a:Fighter)
+WHERE NOT ()-[:beats]->(a)
+RETURN a
+
+#### (5) Return defeated fighter (0 wins)
+
+MATCH (a:Fighter)
+WHERE NOT (a)-[:beats]->()
+RETURN a
+
+#### (6) Return all fighters MMA records and create query to enter the record as a property for a fighter {name, weight, record}
+
+MATCH (a:Fighter)
+CALL {
+WITH a
+MATCH (a)-[r:beats]->(c:Fighter)
+RETURN count(r) AS wins
+}
+CALL {
+WITH a
+MATCH (c:Fighter)-[r:beats]->(a)
+RETURN count(r) AS looses
+}
+SET a.record = toString(wins)+'-'+toString(looses)
+return a.name, a.record
+
+#### OUTPUT ex1.6[
+
+{
+"a.name": "Jon Jones",
+"a.record": "2-1"
+},
+{
+"a.name": "Khabib Nurmagomedov",
+"a.record": "1-0"
+},
+{
+"a.name": "Daniel Cormier",
+"a.record": "0-1"
+},
+{
+"a.name": "Rafael Dos Anjos",
+"a.record": "1-1"
+},
+{
+"a.name": "Michael Bisping",
+"a.record": "3-1"
+},
+{
+"a.name": "Neil Magny",
+"a.record": "1-1"
+},
+{
+"a.name": "Matt Hamill",
+"a.record": "1-2"
+},
+{
+"a.name": "Brandon Vera",
+"a.record": "1-1"
+},
+{
+"a.name": "Frank Mir",
+"a.record": "1-1"
+},
+{
+"a.name": "Brock Lesnar",
+"a.record": "0-1"
+},
+{
+"a.name": "Kelvin Gastelum",
+"a.record": "1-2"
+}
+]
